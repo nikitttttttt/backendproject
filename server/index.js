@@ -9,13 +9,14 @@ import Cart from './models/cartModel.js'
 import Product from './models/productModel.js'
 
 import router from './routers/router.js'
+import errorHandler from './middleware/errorHandler.js'
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 app.use('/api', router)
-
+app.use(errorHandler)
 const url = process.env.SERVER_URL
 const port = process.env.PORT
 

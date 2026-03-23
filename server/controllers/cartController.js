@@ -1,35 +1,41 @@
-import Cart from "../models/cartModel.js"
+import Cart from '../models/cartModel.js'
 
-// GET все корзины
-export const getAllCarts = async (req, res) => {
+// GET ALL
+export const getAllCarts = async (req, res, next) => {
   try {
-
     const carts = await Cart.findAll()
-
-    res.status(200).json(carts)
-
-  } catch (error) {
-
-    console.error("Не удалось получить корзины")
-
+    res.json(carts)
+  } catch (err) {
+    next(err)
   }
 }
 
-// POST добавить товар в корзину
-export const createCart = async (req, res) => {
+// CREATE
+export const createCart = async (req, res, next) => {
   try {
-
     const { quantity } = req.body
 
-    const newCart = await Cart.create({
-      quantity
-    })
+    const newCart = await Cart.create({ quantity })
 
     res.status(201).json(newCart)
+  } catch (err) {
+    next(err)
+  }
+}
 
-  } catch (error) {
+// DELETE
+export const deleteCart = async (req, res, next) => {
+  try {
+    const { id } = req.params
 
-    console.error("Не удалось создать корзину")
+    const deleted = await Cart.destroy({ where: { id } })
 
+    if (!deleted) {
+      return res.status(404).json({ message: 'Корзина не найдена' })
+    }
+
+    res.json({ message: 'Удалено' })
+  } catch (err) {
+    next(err)
   }
 }
